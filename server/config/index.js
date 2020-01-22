@@ -5,5 +5,10 @@ module.exports = {
     get fullPath () {
       return `http://${this.host}:${this.port}`
     }
+  },
+
+  database: {
+    host: '',
+    db: ''
   }
 }
