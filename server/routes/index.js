@@ -1,18 +1,10 @@
 const api = require('express').Router()
 
-module.exports = api
-
 const fs = require('fs')
 const { join } = require('path')
+const { isDirectory, isFile } = require('../lib/folder')
 const contentDir = __dirname
-
-function isDirectory (path) {
-  return fs.existsSync(path) && fs.statSync(path).isDirectory()
-}
-
-function isFile (path) {
-  return fs.existsSync(path) && fs.statSync(path).isFile()
-}
+const basePath = '/api'
 
 /**
  * Importar dinamicamente as rotas quando encontrar os arquivos index.js nas pastas
@@ -23,8 +15,9 @@ for (let child of fs.readdirSync(contentDir)) {
     if (isDirectory(path)) {
       let indexFile = join(path, 'index.js')
       if (isFile(indexFile)) {
+        console.log(`Route registered: ${basePath}/${child}`)
         const router = require(indexFile)
-        api.use('/api', router)
+        api.use(basePath, router)
       }
     }
   } catch (e) {
@@ -32,3 +25,5 @@ for (let child of fs.readdirSync(contentDir)) {
     console.error(e)
   }
 }
+
+module.exports = api
