@@ -1,4 +1,3 @@
-const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
@@ -6,17 +5,14 @@ const routes = require('./server/routes')
 
 const app = express()
 
-// Include routes
-app.use(routes)
+// parse application/x-www-form-urlencoded
 app.use(express.json())
+// parse application/json
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404))
-})
+// Include routes
+app.use(routes)
 
 // error handler
 app.use(function(err, req, res, next) {
